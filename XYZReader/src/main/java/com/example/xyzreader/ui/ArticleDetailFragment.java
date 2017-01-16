@@ -42,13 +42,27 @@ import butterknife.Unbinder;
  */
 public class ArticleDetailFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
-    private static final String TAG = "ArticleDetailFragment";
-
     public static final String ARG_ITEM_ID = "item_id";
     private Unbinder unbinder;
     private long mItemId;
     @BindView(R.id.article_photo)
     ImageView mPhotoView;
+
+    @BindView(R.id.share_fab)
+    FloatingActionButton mShareFab;
+
+    @BindView(R.id.detail_toolbar)
+    Toolbar mToolbar;
+
+    @BindView(R.id.toolbar_layout)
+    CollapsingToolbarLayout mCollapsingToolbarLayout;
+
+    @BindView(R.id.app_bar)
+    AppBarLayout mAppBarLayout;
+
+    @Nullable
+    @BindView(R.id.card)
+    CardView mCard;
 
     @BindView(R.id.details_extra_toolbar)
     LinearLayout detailsToolbar;
@@ -58,20 +72,6 @@ public class ArticleDetailFragment extends Fragment implements
     TextView mAuthorView;
     @BindView(R.id.article_body)
     TextView mBodyView;
-    @BindView(R.id.share_fab)
-    FloatingActionButton mShareFab;
-    @Nullable
-    @BindView(R.id.detail_toolbar)
-    Toolbar mToolbar;
-    @Nullable
-    @BindView(R.id.toolbar_layout)
-    CollapsingToolbarLayout mCollapsingToolbarLayout;
-    @Nullable
-    @BindView(R.id.app_bar)
-    AppBarLayout mAppBarLayout;
-    @Nullable
-    @BindView(R.id.card)
-    CardView mCard;
 
     public ArticleDetailFragment() {
     }
@@ -99,10 +99,6 @@ public class ArticleDetailFragment extends Fragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // In support library r8, calling initLoader for a fragment in a FragmentPagerAdapter in
-        // the fragment's onCreate may cause the same LoaderManager to be dealt to multiple
-        // fragments because their mIndex is -1 (haven't been added to the activity yet). Thus,
-        // we do this in onActivityCreated.
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -158,6 +154,10 @@ public class ArticleDetailFragment extends Fragment implements
         mAuthorView.setText(author);
         mBodyView.setText(body);
 
+
+        /*
+        https://github.com/bumptech/glide
+         */
         Glide.with(this)
                 .load(photo)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -189,10 +189,10 @@ public class ArticleDetailFragment extends Fragment implements
         });
     }
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-    }
-
+    /*
+       Selecting the Palette color was taken from the following source:
+       https://guides.codepath.com/android/Dynamic-Color-using-Palettes
+        */
     private void changeToolbarColors(Bitmap bitmap) {
         Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
             public void onGenerated(Palette palette) {
@@ -206,4 +206,9 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
     }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+    }
+
 }

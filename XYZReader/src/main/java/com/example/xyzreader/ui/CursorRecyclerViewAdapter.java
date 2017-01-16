@@ -5,7 +5,7 @@ import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
 
 /**
- * Created by sam_chordas on 10/6/15.
+ * The cursor recycler view adapter taken from:
  * https://gist.github.com/skyfishjy/443b7448f59be978bc59
  */
 public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHolder>

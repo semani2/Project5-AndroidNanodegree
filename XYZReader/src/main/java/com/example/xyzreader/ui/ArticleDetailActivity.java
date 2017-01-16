@@ -24,7 +24,9 @@ public class ArticleDetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public final static String START_ID = "START_ID";
+
     private Cursor mCursor;
+
     private long mStartId;
     private MyPagerAdapter mPagerAdapter;
     @BindView(R.id.pager)

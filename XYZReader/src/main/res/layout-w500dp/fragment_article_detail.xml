@@ -122,8 +122,7 @@
         app:elevation="6dp"
         app:fabSize="normal"
 
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end"
+        android:layout_gravity="bottom|end"
 
         android:id="@+id/share_fab"
         android:layout_margin="16dp"
