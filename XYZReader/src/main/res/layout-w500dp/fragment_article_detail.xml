@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:ignore="MergeRootFrame">
+    android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -19,11 +17,10 @@
             android:layout_height="match_parent"
             android:id="@+id/toolbar_layout"
             android:fitsSystemWindows="true"
-            app:layout_scrollFlags="scroll"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:expandedTitleMargin="16dp"
             app:expandedTitleMarginBottom="40dp"
-            app:toolbarId="@id/toolbar"
-            >
+            app:expandedTitleTextAppearance="@style/TitleTextAppearance">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -50,7 +47,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/negative_app_bar_margin"
-        android:fitsSystemWindows="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
@@ -73,7 +69,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/detail_toolbar_height"
+                        android:layout_height="wrap_content"
                         android:id="@+id/details_extra_toolbar"
                         android:layout_gravity="bottom"
                         android:orientation="vertical"
