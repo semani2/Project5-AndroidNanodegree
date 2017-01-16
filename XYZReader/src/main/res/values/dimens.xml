@@ -10,4 +10,9 @@
 
     <integer name="grid_column_count">2</integer>
     <dimen name="list_max_width">400dp</dimen>
+
+    <dimen name="detail_appbar_height">320dp</dimen>
+    <dimen name="detail_toolbar_height">80dp</dimen>
+
+    <dimen name="negative_app_bar_margin">-180dp</dimen>
 </resources>
