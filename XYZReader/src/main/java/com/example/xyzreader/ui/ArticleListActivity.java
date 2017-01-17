@@ -8,7 +8,9 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
@@ -60,12 +62,9 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        int columnCount = getResources().getInteger(R.integer.grid_column_count);
-        StaggeredGridLayoutManager staggeredGridLayoutManager =
-                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+        setupGrid();
 
-        mAdapter = new ArticleListAdapter(null);
+        mAdapter = new ArticleListAdapter(this, null);
         mAdapter.setHasStableIds(true);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -74,6 +73,13 @@ public class ArticleListActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
             refresh();
         }
+    }
+
+    private void setupGrid() {
+        int columnCount = getResources().getInteger(R.integer.grid_column_count);
+        StaggeredGridLayoutManager staggeredGridLayoutManager =
+                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
     }
 
     private void setupToolbar() {
@@ -136,9 +142,11 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     public class ArticleListAdapter extends CursorRecyclerViewAdapter<ArticleListAdapter.ViewHolder>{
+        private final ArticleListActivity mActivity;
 
-        public ArticleListAdapter(Cursor cursor) {
+        public ArticleListAdapter(ArticleListActivity activity, Cursor cursor) {
             super(cursor);
+            this.mActivity = activity;
         }
 
         @Override
@@ -148,8 +156,25 @@ public class ArticleListActivity extends AppCompatActivity implements
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    parent.getContext().startActivity(new Intent(Intent.ACTION_VIEW,
-                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
+                    final Intent intent = new Intent(Intent.ACTION_VIEW,
+                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
+
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        String transitionName = mActivity.getString(R.string.shared_element_transition) + vh.getAdapterPosition();
+
+                        view.findViewById(R.id.thumbnail).setTransitionName(transitionName);
+
+
+
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                mActivity, view.findViewById(R.id.thumbnail), transitionName);
+                        intent.putExtra("STE", transitionName);
+                        mActivity.startActivity(intent, options.toBundle());
+                    }
+                    else {
+                        mActivity.startActivity(intent);
+                    }
+
                 }
             });
             return vh;

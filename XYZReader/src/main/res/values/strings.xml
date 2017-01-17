@@ -9,4 +9,6 @@
 
     <string name="up">Up</string>
 
+    <string name="shared_element_transition" translatable="false">article_translation</string>
+
 </resources>

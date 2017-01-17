@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -64,8 +65,11 @@ public class ArticleDetailFragment extends Fragment implements
     @BindView(R.id.card)
     CardView mCard;
 
+    @Nullable
     @BindView(R.id.details_extra_toolbar)
     LinearLayout detailsToolbar;
+
+    @Nullable
     @BindView(R.id.article_title)
     TextView mTitleView;
     @BindView(R.id.article_author)
@@ -107,6 +111,10 @@ public class ArticleDetailFragment extends Fragment implements
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_article_detail, container, false);
         unbinder = ButterKnife.bind(this, view);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mPhotoView.setTransitionName(getActivity().getIntent().getStringExtra("STE"));
+        }
         return view;
     }
 
@@ -150,7 +158,9 @@ public class ArticleDetailFragment extends Fragment implements
             });
         }
 
-        mTitleView.setText(title);
+        if(mTitleView != null) {
+            mTitleView.setText(title);
+        }
         mAuthorView.setText(author);
         mBodyView.setText(body);
 
@@ -172,7 +182,9 @@ public class ArticleDetailFragment extends Fragment implements
                                                    Target<GlideDrawable> target,
                                                    boolean isFromMemoryCache, boolean isFirstResource) {
                         Bitmap bitmap = ((GlideBitmapDrawable) resource.getCurrent()).getBitmap();
-                        changeToolbarColors(bitmap);
+                        if (mCard != null) {
+                            changeToolbarColors(bitmap);
+                        }
                         return false;
                     }
                 })

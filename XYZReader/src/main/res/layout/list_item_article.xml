@@ -15,7 +15,7 @@
             android:id="@+id/thumbnail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/ltgray"/>
+            android:background="@color/ltgray" />
 
         <TextView
             android:id="@+id/article_title"

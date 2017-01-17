@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/article_photo"
+            android:fitsSystemWindows="true"
+            android:scaleType="centerCrop" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/photo_background_protection" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/detail_toolbar_height"
+            android:id="@+id/details_extra_toolbar"
+            android:layout_gravity="bottom"
+            android:elevation="4dp"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="10dp"
+            android:background="@android:color/transparent"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/article_title"
+                android:maxLines="1"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                style="?android:attr/textAppearanceMedium"
+                android:visibility="invisible"/>
+
+            <TextView
+                android:id="@+id/article_author"
+                style="?android:attr/textAppearanceSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+
+</FrameLayout>
