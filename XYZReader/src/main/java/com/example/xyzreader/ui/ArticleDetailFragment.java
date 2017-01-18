@@ -182,9 +182,7 @@ public class ArticleDetailFragment extends Fragment implements
                                                    Target<GlideDrawable> target,
                                                    boolean isFromMemoryCache, boolean isFirstResource) {
                         Bitmap bitmap = ((GlideBitmapDrawable) resource.getCurrent()).getBitmap();
-                        if (mCard != null) {
-                            changeToolbarColors(bitmap);
-                        }
+                        changeToolbarColors(bitmap, mCard != null);
                         return false;
                     }
                 })
@@ -205,12 +203,16 @@ public class ArticleDetailFragment extends Fragment implements
        Selecting the Palette color was taken from the following source:
        https://guides.codepath.com/android/Dynamic-Color-using-Palettes
         */
-    private void changeToolbarColors(Bitmap bitmap) {
+    private void changeToolbarColors(Bitmap bitmap, final boolean setBackgroundColor) {
         Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
             public void onGenerated(Palette palette) {
                 int defaultColor = 0xFF333333;
                 int darkMutedColor = palette.getDarkMutedColor(defaultColor);
-                detailsToolbar.setBackgroundColor(darkMutedColor);
+
+                if(setBackgroundColor) {
+                    detailsToolbar.setBackgroundColor(darkMutedColor);
+                }
+
                 if (mCollapsingToolbarLayout != null) {
                     mCollapsingToolbarLayout.setContentScrimColor(darkMutedColor);
                     mCollapsingToolbarLayout.setStatusBarScrimColor(darkMutedColor);
