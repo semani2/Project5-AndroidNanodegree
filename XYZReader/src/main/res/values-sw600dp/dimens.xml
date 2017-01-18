@@ -7,4 +7,6 @@
 
     <integer name="grid_column_count">4</integer>
     <dimen name="list_max_width">580dp</dimen>
+
+    <dimen name="body_margin">150dp</dimen>
 </resources>

@@ -14,7 +14,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
@@ -62,18 +61,16 @@ public class ArticleDetailFragment extends Fragment implements
     AppBarLayout mAppBarLayout;
 
     @Nullable
-    @BindView(R.id.card)
-    CardView mCard;
-
-    @Nullable
     @BindView(R.id.details_extra_toolbar)
     LinearLayout detailsToolbar;
 
     @Nullable
     @BindView(R.id.article_title)
     TextView mTitleView;
+
     @BindView(R.id.article_author)
     TextView mAuthorView;
+
     @BindView(R.id.article_body)
     TextView mBodyView;
 
@@ -146,9 +143,7 @@ public class ArticleDetailFragment extends Fragment implements
         String photo = cursor.getString(ArticleLoader.Query.PHOTO_URL);
 
         if (mToolbar != null) {
-            if (mCard == null) {
-                mToolbar.setTitle(title);
-            }
+            mToolbar.setTitle(title);
             mToolbar.setNavigationIcon(R.drawable.ic_action_arrow_left);
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -182,7 +177,7 @@ public class ArticleDetailFragment extends Fragment implements
                                                    Target<GlideDrawable> target,
                                                    boolean isFromMemoryCache, boolean isFirstResource) {
                         Bitmap bitmap = ((GlideBitmapDrawable) resource.getCurrent()).getBitmap();
-                        changeToolbarColors(bitmap, mCard != null);
+                        changeToolbarColors(bitmap);
                         return false;
                     }
                 })
@@ -203,15 +198,11 @@ public class ArticleDetailFragment extends Fragment implements
        Selecting the Palette color was taken from the following source:
        https://guides.codepath.com/android/Dynamic-Color-using-Palettes
         */
-    private void changeToolbarColors(Bitmap bitmap, final boolean setBackgroundColor) {
+    private void changeToolbarColors(Bitmap bitmap) {
         Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
             public void onGenerated(Palette palette) {
                 int defaultColor = 0xFF333333;
                 int darkMutedColor = palette.getDarkMutedColor(defaultColor);
-
-                if(setBackgroundColor) {
-                    detailsToolbar.setBackgroundColor(darkMutedColor);
-                }
 
                 if (mCollapsingToolbarLayout != null) {
                     mCollapsingToolbarLayout.setContentScrimColor(darkMutedColor);

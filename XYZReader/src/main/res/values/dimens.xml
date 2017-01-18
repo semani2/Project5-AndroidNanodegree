@@ -15,4 +15,6 @@
     <dimen name="detail_toolbar_height">80dp</dimen>
 
     <dimen name="negative_app_bar_margin">-180dp</dimen>
+
+    <dimen name="body_margin">16dp</dimen>
 </resources>
