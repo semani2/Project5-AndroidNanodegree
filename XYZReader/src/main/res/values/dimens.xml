@@ -17,4 +17,6 @@
     <dimen name="negative_app_bar_margin">-180dp</dimen>
 
     <dimen name="body_margin">16dp</dimen>
+
+    <integer name="is_tablet">0</integer>
 </resources>

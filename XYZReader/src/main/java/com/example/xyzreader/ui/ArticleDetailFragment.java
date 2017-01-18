@@ -214,7 +214,9 @@ public class ArticleDetailFragment extends Fragment implements
 
                 if (mCollapsingToolbarLayout != null) {
                     mCollapsingToolbarLayout.setContentScrimColor(darkMutedColor);
-                    mCollapsingToolbarLayout.setStatusBarScrimColor(darkMutedColor);
+                    if(getResources().getInteger(R.integer.is_tablet) == 0) {
+                        mCollapsingToolbarLayout.setStatusBarScrimColor(darkMutedColor);
+                    }
                 }
             }
         });
