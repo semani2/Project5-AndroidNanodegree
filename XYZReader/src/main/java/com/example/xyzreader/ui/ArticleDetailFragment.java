@@ -17,9 +17,12 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -92,8 +95,6 @@ public class ArticleDetailFragment extends Fragment implements
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mItemId = getArguments().getLong(ARG_ITEM_ID);
         }
-
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -110,8 +111,15 @@ public class ArticleDetailFragment extends Fragment implements
         unbinder = ButterKnife.bind(this, view);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mPhotoView.setTransitionName(getActivity().getIntent().getStringExtra("STE"));
+            Slide slide = new Slide(Gravity.BOTTOM);
+            slide.addTarget(mBodyView);
+            slide.setInterpolator(
+                    AnimationUtils.loadInterpolator(getActivity(),
+                            android.R.interpolator.linear_out_slow_in));
+            slide.setDuration(300);
+            getActivity().getWindow().setEnterTransition(slide);
         }
+
         return view;
     }
 
