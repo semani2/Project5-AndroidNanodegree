@@ -48,8 +48,10 @@ public class ArticleDetailActivity extends AppCompatActivity
             mStartId = savedInstanceState.getLong(START_ID);
         }
 
-
-
+        /*
+        Followed the code on the following link to implement the fragment state pager adapter
+        https://developer.android.com/reference/android/support/v4/app/FragmentStatePagerAdapter.html
+        */
         mPagerAdapter = new MyPagerAdapter(getFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {

@@ -7,16 +7,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -40,11 +37,14 @@ import butterknife.ButterKnife;
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener {
 
-    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
-    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private ArticleListAdapter mAdapter;
+    @BindView(R.id.recycler_view)
+    RecyclerView mRecyclerView;
+
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +55,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         setupToolbar();
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
-
-        setupGrid();
-
-        mAdapter = new ArticleListAdapter(this, null);
-        mAdapter.setHasStableIds(true);
-        mRecyclerView.setAdapter(mAdapter);
 
         getLoaderManager().initLoader(0, null, this);
 
@@ -122,12 +116,16 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        mAdapter.swapCursor(cursor);
+        Adapter adapter = new Adapter(cursor);
+        adapter.setHasStableIds(true);
+        mRecyclerView.setAdapter(adapter);
+
+        setupGrid();
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mAdapter.swapCursor(null);
+        mRecyclerView.setAdapter(null);
     }
 
     @Override
@@ -135,89 +133,78 @@ public class ArticleListActivity extends AppCompatActivity implements
        refresh();
     }
 
-    public class ArticleListAdapter extends CursorRecyclerViewAdapter<ArticleListAdapter.ViewHolder>{
-        private final ArticleListActivity mActivity;
+    private class Adapter extends RecyclerView.Adapter<ViewHolder> {
+        private Cursor mCursor;
 
-        public ArticleListAdapter(ArticleListActivity activity, Cursor cursor) {
-            super(cursor);
-            this.mActivity = activity;
+        public Adapter(Cursor cursor) {
+            mCursor = cursor;
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_article, parent, false);
+        public long getItemId(int position) {
+            mCursor.moveToPosition(position);
+            return mCursor.getLong(ArticleLoader.Query._ID);
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = getLayoutInflater().inflate(R.layout.list_item_article, parent, false);
             final ViewHolder vh = new ViewHolder(view);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    final Intent intent = new Intent(Intent.ACTION_VIEW,
-                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
-
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        String transitionName = mActivity.getString(R.string.shared_element_transition) + vh.getAdapterPosition();
-
-                        view.findViewById(R.id.thumbnail).setTransitionName(transitionName);
-
-
-
-                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                mActivity, view.findViewById(R.id.thumbnail), transitionName);
-                        intent.putExtra("STE", transitionName);
-                        mActivity.startActivity(intent, options.toBundle());
-                    }
-                    else {
-                        mActivity.startActivity(intent);
-                    }
-
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
                 }
             });
             return vh;
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, final Cursor cursor) {
-            holder.titleView.setText(cursor.getString(ArticleLoader.Query.TITLE));
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            mCursor.moveToPosition(position);
+            holder.titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
             holder.subtitleView.setText(
                     DateUtils.getRelativeTimeSpanString(
-                            cursor.getLong(ArticleLoader.Query.PUBLISHED_DATE),
+                            mCursor.getLong(ArticleLoader.Query.PUBLISHED_DATE),
                             System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
                             DateUtils.FORMAT_ABBREV_ALL).toString());
-            holder.authorTextView.setText(cursor.getString(ArticleLoader.Query.AUTHOR));
-            holder.thumbnailView.setAspectRatio(cursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
+            holder.authorTextView.setText(mCursor.getString(ArticleLoader.Query.AUTHOR));
+            holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
             Glide.clear(holder.thumbnailView);
 
         /*
         https://github.com/bumptech/glide
          */
             Glide.with(holder.thumbnailView.getContext())
-                    .load(cursor.getString(ArticleLoader.Query.THUMB_URL))
+                    .load(mCursor.getString(ArticleLoader.Query.THUMB_URL))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .dontAnimate()
                     .into(holder.thumbnailView);
 
             // Back up as glide is failing to load few images.
-            holder.thumbnailView.setImageUrl(cursor.getString(ArticleLoader.Query.THUMB_URL),
+            holder.thumbnailView.setImageUrl(mCursor.getString(ArticleLoader.Query.THUMB_URL),
                     ImageLoaderHelper.getInstance(holder.thumbnailView.getContext()).getImageLoader());
         }
 
         @Override
         public int getItemCount() {
-            return super.getItemCount();
+            return mCursor.getCount();
         }
+    }
 
-        public  class ViewHolder extends RecyclerView.ViewHolder {
-            public DynamicHeightNetworkImageView thumbnailView;
-            public TextView titleView;
-            public TextView subtitleView;
-            public TextView authorTextView;
+    public  class ViewHolder extends RecyclerView.ViewHolder {
+        public DynamicHeightNetworkImageView thumbnailView;
+        public TextView titleView;
+        public TextView subtitleView;
+        public TextView authorTextView;
 
-            public ViewHolder(View view) {
-                super(view);
-                thumbnailView = (DynamicHeightNetworkImageView) view.findViewById(R.id.thumbnail);
-                titleView = (TextView) view.findViewById(R.id.article_title);
-                subtitleView = (TextView) view.findViewById(R.id.article_subtitle);
-                authorTextView = (TextView) view.findViewById(R.id.article_author);
-            }
+        public ViewHolder(View view) {
+            super(view);
+            thumbnailView = (DynamicHeightNetworkImageView) view.findViewById(R.id.thumbnail);
+            titleView = (TextView) view.findViewById(R.id.article_title);
+            subtitleView = (TextView) view.findViewById(R.id.article_subtitle);
+            authorTextView = (TextView) view.findViewById(R.id.article_author);
         }
     }
 }
