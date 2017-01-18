@@ -9,6 +9,12 @@
         <item name="android:windowContentTransitions">true</item>
     </style>
 
+    <style name="AppTheme.Home" parent="AppTheme">
+        <item name="android:windowExitTransition">
+            @transition/grid_exit
+        </item>
+    </style>
+
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
