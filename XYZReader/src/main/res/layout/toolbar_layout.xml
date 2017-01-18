@@ -26,7 +26,6 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="24dp"
-            android:paddingBottom="10dp"
             android:background="@android:color/transparent"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
@@ -39,13 +38,6 @@
                 android:textStyle="bold"
                 style="?android:attr/textAppearanceMedium"
                 android:visibility="invisible"/>
-
-            <TextView
-                android:id="@+id/article_author"
-                style="?android:attr/textAppearanceSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white" />
         </LinearLayout>
 
 </FrameLayout>

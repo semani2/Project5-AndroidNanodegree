@@ -74,6 +74,9 @@ public class ArticleDetailFragment extends Fragment implements
     @BindView(R.id.article_author)
     TextView mAuthorView;
 
+    @BindView(R.id.article_date)
+    TextView mDateView;
+
     @BindView(R.id.article_body)
     TextView mBodyView;
 
@@ -140,13 +143,12 @@ public class ArticleDetailFragment extends Fragment implements
         }
 
         final String title = cursor.getString(ArticleLoader.Query.TITLE);
-        String author = Html.fromHtml(
+        String date = Html.fromHtml(
                 DateUtils.getRelativeTimeSpanString(
                         cursor.getLong(ArticleLoader.Query.PUBLISHED_DATE),
                         System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
-                        DateUtils.FORMAT_ABBREV_ALL).toString()
-                        + " by "
-                        + cursor.getString(ArticleLoader.Query.AUTHOR)).toString();
+                        DateUtils.FORMAT_ABBREV_ALL).toString()).toString();
+        String author = cursor.getString(ArticleLoader.Query.AUTHOR);
         final String body = Html.fromHtml(cursor.getString(ArticleLoader.Query.BODY)).toString();
         String photo = cursor.getString(ArticleLoader.Query.PHOTO_URL);
 
@@ -166,7 +168,7 @@ public class ArticleDetailFragment extends Fragment implements
         }
         mAuthorView.setText(author);
         mBodyView.setText(body);
-
+        mDateView.setText(date);
 
         /*
         https://github.com/bumptech/glide
